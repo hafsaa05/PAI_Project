@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wine Data Visualizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-image: url("static/bg.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: 50px;
+            padding: 0;
+            color: #333;
+            text-align: center;
+        }
+
+        header {
+            background-image: url("static/bg3.jfif");
+            background-size: cover;
+            background-repeat: no-repeat;
+            border-radius: 20px;
+            color: white;
+            padding: 20px 0;
+            font-size: 1.6em;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            width: 90%;
+        }
+
+        main {
+            padding: 20px;
+            max-width: 900px;
+            margin: 20px auto;
+        }
+
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .form-container select {
+            padding: 10px;
+            width: 40%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            text-align: center;
+            font-size: 1em;
+            background-color: #021526;
+            color: white;
+        }
+
+        .form-container .cluster-input {
+            display: none; /* Initially hidden */
+            margin-bottom: 20px;
+        }
+
+        .form-container button {
+            padding: 10px 20px;
+            background-color: #021526;
+            color: white;
+            width: 40%;
+            font-size: 1.1em;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            background: rgba(170, 168, 168, 0.9); /* Soft gradient */
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Deeper shadow for depth */
+            text-align: center;
+            width: 90%; /* Makes it responsive */
+            max-width: 900px; /* Ensures it doesn’t grow too large */
+            margin: 20px auto; /* Centers it on the page */
+            transition: transform 0.3s, box-shadow 0.3s; /* Smooth hover effect */
+        }
+        
+        .container:hover {
+            transform: scale(1.02); /* Slight zoom effect */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+        }
+
+        .form-container button:hover {
+            background-color: #30434B;
+        }
+
+        img {
+            max-width: 85%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        img:hover {
+            transform: scale(1.03);
+        }
+
+        .authors {
+            margin-top: 40px;
+            background-color: #021526;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 720px;
+            margin: 20px auto;
+        }
+
+        .authors h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .authors p {
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        .authors {
+            position: relative;
+            bottom: 10px;
+            top: 10px;
+            right: 15px;
+            font-size: 0.8em; /* Small text */
+            color: #666; /* Subtle color */
+            font-family: 'Roboto', sans-serif;
+            opacity: 0.9; /* Slightly faded for subtlety */
+        }
+    
+        .authors:hover {
+            opacity: 1; /* Becomes fully visible on hover */
+            color: #333; /* Darker color for better visibility */
+        }
+
+        @media screen and (max-width: 768px) {
+            header {
+                font-size: 1.4em;
+            }
+
+            .form-container {
+                width: 85%;
+                padding: 15px;
+            }
+
+            img {
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+   <div class="container">
+    <header>
+        <h1>Wine Data Visualization</h1>
+        <p>Select a plot type to view:</p>
+    </header>
+    <main>
+        <form class="form-container" method="get" action="/">
+            <select name="plot_type" id="plot_type" required onchange="toggleClusterInput()">
+                <option value="" disabled selected>Select a plot type</option>
+                <option value="correlation">Correlation Heatmap</option>
+                <option value="scatter">Scatter Plot</option>
+                <option value="box_all">Box Plot</option>
+                <option value="box_melted">Bar Graph</option>
+                <option value="distribution">Distribution Plot</option>
+                <option value="kmeans">K-Means Clustering</option>
+            </select>
+            
+            <div class="cluster-input" id="cluster_input" style="padding-top: 20px;">
+                <label for="n_clusters" style="font-size: 1em; font-weight: 600;">Clusters:</label>
+                <input type="number" name="n_clusters" id="n_clusters" value="2" min="2" max="10">
+            </div>
+            
+            <button type="submit">Generate Plot</button>
+        </form>
+
+        <img src="data:image/png;base64,{{base64_image}}" alt="Visualization">
+    </main>
+</div>
+
+<div class="authors">
+    <p>Developed by: Raghib Rizwan Rabani & Hafsa Rashid</p>
+</div>
+
+<script>
+    function toggleClusterInput() {
+        const plotType = document.getElementById("plot_type").value;
+        const clusterInput = document.getElementById("cluster_input");
+        if (plotType === "kmeans") {
+            clusterInput.style.display = "block";
+        } else {
+            clusterInput.style.display = "none";
+        }
+    }
+</script>
+</body>
+</html>
